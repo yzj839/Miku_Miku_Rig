@@ -31,7 +31,7 @@ Decorate MMD armature with one click
 ![picture2](https://github.com/958261649/Miku_Miku_Rig/blob/main/preview/QQ%E6%88%AA%E5%9B%BE20210616125406.png)
 
 视频演示：
-https://www.bilibili.com/video/BV1vZ4y1P71a/
+
 =======
 Decorate MMD armature with one click
 >>>>>>> Stashed changes
