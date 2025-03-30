@@ -1,8 +1,8 @@
 bl_info = {
     "name": "MikuMikuRig", #插件名字
-    "author": "William", #作者名字
-    "version": (0, 5, 6, 0), #插件版本
-    "blender": (2, 90, 0), #需要的*最低* blender 版本
+    "author": "William、(modify)秀吉の叶子", #作者名字
+    "version": (0, 5, 7, 0), #插件版本
+    "blender": (4, 1, 0), #需要的*最低* blender 版本
     "location": "3DView > Tools", #插件所在位置
     "description": "快速为各种人形模型生成rigify控制器,一键套mixamo动作", #描述
     "support": 'COMMUNITY', #支持等级（社区支持）

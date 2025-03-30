@@ -75,7 +75,7 @@ def add_constraint3(constraint_List,preset_dict):
         parent_bone.matrix=mmd_arm.pose.bones[From].matrix
         parent_bone.tail=mmd_arm.pose.bones[From].tail
         parent_bone.parent=rig.data.edit_bones[To]
-        parent_bone.layers=rig.data.edit_bones[To].layers
+        # parent_bone.layers=rig.data.edit_bones[To].layers
 
     bpy.ops.object.mode_set(mode = 'POSE')
 
@@ -145,6 +145,10 @@ def RIG2(context):
     #生成字典
     unconnect_bone=['spine']
     mmd_bones_list=mmd_arm.pose.bones.keys()
+    # Print the list of bones in the armature
+    # print("List of bones in the armature:")
+    # for bone in mmd_arm.pose.bones:
+    #     print(bone.name)
     preset_dict={}
     bpy.ops.object.mode_set(mode = 'EDIT')
     for bone in mmd_arm.pose.bones:
@@ -422,7 +426,8 @@ def RIG2(context):
     bpy.ops.object.select_all(action='DESELECT')
     context.view_layer.objects.active=rigify_arm
     rigify_arm.select_set(True)
-
+    print("生成控制器")
+    bpy.ops.armature.rigify_upgrade_layers()#更新层
     bpy.ops.pose.rigify_generate()
     rig=context.view_layer.objects.active
 
@@ -521,8 +526,8 @@ def RIG2(context):
         Center=rig.pose.bones["Center"]
         #Center.mmd_bone.name_j='センター'
         Center.custom_shape = rig.pose.bones["root"].custom_shape
-        Center.bone.layers=rig.data.bones["torso"].layers
-        Center.bone_group = rig.pose.bone_groups['Special'] 
+        # Center.bone.layers=rig.data.bones["torso"].layers
+        # Center.bone_group = rig.pose.bone_groups['Special'] 
     else:
         #rig.pose.bones['MCH-torso.parent'].mmd_bone.name_j='グルーブ'
         pass
@@ -717,18 +722,18 @@ def RIG2(context):
 
     #隐藏部分控制器
     #hide some controller
-    rig.data.layers[1] = False
-    rig.data.layers[2] = False
-    rig.data.layers[4] = False
-    rig.data.layers[6] = False
-    rig.data.layers[8] = False
-    rig.data.layers[9] = False
-    rig.data.layers[11] = False
-    rig.data.layers[12] = False
-    rig.data.layers[14] = False
-    rig.data.layers[15] = False
-    rig.data.layers[17] = False
-    rig.data.layers[18] = False
+    # rig.data.layers[1] = False
+    # rig.data.layers[2] = False
+    # rig.data.layers[4] = False
+    # rig.data.layers[6] = False
+    # rig.data.layers[8] = False
+    # rig.data.layers[9] = False
+    # rig.data.layers[11] = False
+    # rig.data.layers[12] = False
+    # rig.data.layers[14] = False
+    # rig.data.layers[15] = False
+    # rig.data.layers[17] = False
+    # rig.data.layers[18] = False
     if 'eye.L' not in preset_dict or 'eye.R' not in preset_dict:
         rig.data.layers[0] = False
 
