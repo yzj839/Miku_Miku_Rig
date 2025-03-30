@@ -606,7 +606,8 @@ def load_vmd(OT,context):
     bone_a.rotation_mode='QUATERNION'
     bone_a.rotation_quaternion=mat_3.to_quaternion()
     
-    bpy.ops.mmd_tools.import_vmd(filepath=vmd_path,scale=action_scale_finel,use_pose_mode=True, margin=0)
+    # bpy.ops.mmd_tools.import_vmd(filepath=vmd_path,scale=action_scale_finel,use_pose_mode=True, margin=0)
+    bpy.ops.mmd_tools.import_vmd(filepath=vmd_path,scale=action_scale_finel,use_pose_mode=True, margin=0, files=[{"name": os.path.basename(vmd_path), "name": os.path.basename(vmd_path)}], directory=os.path.dirname(vmd_path))
     bpy.context.scene.frame_end=old_frame_end
     
 
@@ -710,7 +711,9 @@ def load_vmd(OT,context):
     mmd_arm.data.edit_bones["全ての親"].matrix=rigify_arm.data.bones[rigify_dict['Root']].matrix_local
 
     bpy.ops.object.mode_set(mode = 'POSE')
-    bpy.ops.mmd_tools.import_vmd(filepath=vmd_path,scale=1, margin=0)
+    # bpy.ops.mmd_tools.import_vmd(filepath=vmd_path,scale=1, margin=0)
+    bpy.ops.mmd_tools.import_vmd(filepath=vmd_path,scale=1, margin=0, files=[{"name": os.path.basename(vmd_path), "name": os.path.basename(vmd_path)}], directory=os.path.dirname(vmd_path))
+    
     bpy.context.scene.frame_end=old_frame_end
     bpy.ops.pose.select_all(action='DESELECT')
     bake_name_list=['foot.L','foot.R','shoulder.L','shoulder.R','upper_arm.L','upper_arm.R','forearm.L','forearm.R','hand.L','hand.R','spine']
@@ -721,7 +724,7 @@ def load_vmd(OT,context):
     fcurves2=vmd_action2.fcurves
     frame_range=vmd_action2.frame_range
 
-    bpy.ops.nla.bake(frame_start=frame_range[0], frame_end=frame_range[1], visual_keying=True, clear_constraints=True, use_current_action=True, bake_types={'POSE'})
+    bpy.ops.nla.bake(frame_start=int(frame_range[0]), frame_end=int(frame_range[1]), visual_keying=True, clear_constraints=True, use_current_action=True, bake_types={'POSE'})
     context.window.scene=old_scene
     
     #检测IKFK动作
