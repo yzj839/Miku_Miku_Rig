@@ -4,6 +4,7 @@ import os
 from bpy.types import Operator
 from . import preset
 from mathutils import Matrix,Vector,Quaternion,Euler
+from mmd_tools import auto_scene_setup
 
 def alert_error(title,message):
     def draw(self,context):
@@ -515,8 +516,7 @@ def load_vmd(OT,context):
     mmr_property=scene.mmr_property
     rigify_arm=context.view_layer.objects.active
     vmd_path=OT.filepath
-    fade_in_out=mmr_property.fade_in_out
-    action_scale=mmr_property.action_scale
+    fade_in_out=OT.fade_in_out
     debug=mmr_property.debug
 
     if rigify_arm.type!='ARMATURE':
@@ -577,13 +577,12 @@ def load_vmd(OT,context):
                 bone1.rotation_mode = 'QUATERNION'
 
     #自动缩放
-    action_scale_finel=1
-    if mmr_property.auto_action_scale:
+    if OT.auto_action_scale:
         head_b=rigify_arm2.pose.bones[rigify_dict['thigh.L']].bone.head_local
-        action_scale_finel=head_b[2]/10.2857
+        action_scale=head_b[2]/10.2857
     else:
-        action_scale_finel=action_scale
-    print('Action scale='+str(action_scale_finel))
+        action_scale=OT.action_scale
+    print('Action scale='+str(action_scale))
 
     #矫正手臂角度
     bone_a=rigify_arm2.pose.bones[rigify_dict['upper_arm.L']]
@@ -607,7 +606,7 @@ def load_vmd(OT,context):
     bone_a.rotation_quaternion=mat_3.to_quaternion()
     
     # bpy.ops.mmd_tools.import_vmd(filepath=vmd_path,scale=action_scale_finel,use_pose_mode=True, margin=0)
-    bpy.ops.mmd_tools.import_vmd(filepath=vmd_path,scale=action_scale_finel,use_pose_mode=True, margin=0, files=[{"name": os.path.basename(vmd_path), "name": os.path.basename(vmd_path)}], directory=os.path.dirname(vmd_path))
+    bpy.ops.mmd_tools.import_vmd(filepath=vmd_path,scale=action_scale,use_pose_mode=True, margin=OT.margin, files=[{"name": os.path.basename(vmd_path)}], directory=os.path.dirname(vmd_path))
     bpy.context.scene.frame_end=old_frame_end
     
 
@@ -712,7 +711,7 @@ def load_vmd(OT,context):
 
     bpy.ops.object.mode_set(mode = 'POSE')
     # bpy.ops.mmd_tools.import_vmd(filepath=vmd_path,scale=1, margin=0)
-    bpy.ops.mmd_tools.import_vmd(filepath=vmd_path,scale=1, margin=0, files=[{"name": os.path.basename(vmd_path), "name": os.path.basename(vmd_path)}], directory=os.path.dirname(vmd_path))
+    bpy.ops.mmd_tools.import_vmd(filepath=vmd_path,scale=1,use_pose_mode=True, margin=OT.margin, files=[{"name": os.path.basename(vmd_path)}], directory=os.path.dirname(vmd_path))
     
     bpy.context.scene.frame_end=old_frame_end
     bpy.ops.pose.select_all(action='DESELECT')
@@ -942,7 +941,7 @@ def load_vmd(OT,context):
     if 'HandTwist_R' not in rigify_dict and 'hand.R' in rigify_dict:
         copy_fcurve('hand.R',['手捩.R','手首.R'],'hand.R')
     
-    if mmr_property.import_as_NLA_strip:
+    if OT.import_as_NLA_strip:
         target_track=rigify_arm.animation_data.nla_tracks.new()
         target_track.name='vmd_track'
         target_strip=target_track.strips.new(action_name,bpy.context.scene.frame_current,vmd_action)
@@ -1027,7 +1026,8 @@ def export_vmd(OT,context):
     context.collection.objects.link(mmd_arm2)
     bpy.ops.object.select_all(action='DESELECT')
     bpy.context.view_layer.objects.active=mmd_arm2
-    mmd_arm2.select=True
+    bpy.context.object.hide_viewport = False
+    mmd_arm2.select_set(True)
     print(vmd_path)
 
     if set_action_range:
@@ -1039,7 +1039,6 @@ def export_vmd(OT,context):
             return(False)
         start_frame1=rigify_action.frame_range[0]
         end_frame1=rigify_action.frame_range[1]
-
     bpy.ops.object.mode_set(mode = 'POSE')
     bpy.ops.pose.select_all(action='SELECT')
 
@@ -1053,7 +1052,7 @@ def export_vmd(OT,context):
         else:
             bone.bone.select=False
 
-    bpy.ops.nla.bake(frame_start=start_frame1, frame_end=end_frame1, only_selected=True, visual_keying=True,clear_constraints=True, bake_types={'POSE'})
+    bpy.ops.nla.bake(frame_start=int(start_frame1), frame_end=int(end_frame1), only_selected=True, visual_keying=True,clear_constraints=True, bake_types={'POSE'})
     bpy.ops.object.mode_set(mode = 'OBJECT')
 
     mmd_action=mmd_arm2.animation_data.action
@@ -1227,8 +1226,44 @@ class OT_Import_Vmd(Operator, bpy_extras.io_utils.ImportHelper):
     options={'HIDDEN'} 
     )
     
+    auto_action_scale: bpy.props.BoolProperty(
+        name="Auto Scale",
+        description="Auto Action Scale",
+        default=False
+    )
+    action_scale: bpy.props.FloatProperty(
+        name="Scale",
+        description="Action scale",
+        default=0.08,
+        min=0
+    )
+    margin: bpy.props.IntProperty(
+        name="Margin",
+        description="Margin",
+        default=0
+    )
+    fade_in_out: bpy.props.IntProperty(
+        name="Fade In/Out",
+        description="Fade In/Out",
+        default=0
+    )
+    import_as_NLA_strip: bpy.props.BoolProperty(
+        name="Use NLA",
+        description="Import as NLA strip",
+        default=False
+    )
+    update_scene_settings: bpy.props.BoolProperty(
+        name='Update scene settings',
+        description='Update frame range and frame rate (30 fps)',
+        default=True,
+        )
+
     def execute(self,context):
         load_vmd(self,context)
+        if self.update_scene_settings:
+            auto_scene_setup.setupFrameRanges()
+            auto_scene_setup.setupFps()
+        context.scene.frame_set(context.scene.frame_current)
         return{"FINISHED"}
 
 class OT_Export_Vmd(Operator, bpy_extras.io_utils.ExportHelper):
@@ -1246,7 +1281,7 @@ class OT_Export_Vmd(Operator, bpy_extras.io_utils.ExportHelper):
     scale: bpy.props.FloatProperty(
         name="Action scale",
         description="Action scale",
-        default=1,
+        default=12.5,
         min=0
     )
 
@@ -1276,6 +1311,18 @@ class OT_Export_Vmd(Operator, bpy_extras.io_utils.ExportHelper):
         description="Only Contain Keyframe",
         default=False
     )
+
+    def invoke(self, context, event):
+        self.start_frame = context.scene.frame_start
+        self.end_frame = context.scene.frame_end
+
+        blend_file_path = bpy.path.basename(bpy.context.blend_data.filepath)
+        blend_file_name, _ = os.path.splitext(blend_file_path)
+        default_filename = f"{blend_file_name or 'action'}.vmd"
+        self.filepath = bpy.path.abspath(default_filename)
+
+        wm = context.window_manager.fileselect_add(self)
+        return {'RUNNING_MODAL'}
 
     def execute(self,context):
         export_vmd(self,context)

@@ -581,14 +581,6 @@ class MMR_Retarget_Panel(Mmr_Panel_Base):
         layout.operator("mmr.import_mixamo",text="Import FBX/BVH")
         layout.operator("mmr.import_vmd",text="Import VMD")
         layout.operator("mmr.export_vmd",text="Bake and export VMD animation")
-        layout.prop(mmr_property, "extra_options2", toggle=True,text='Extra Options')
-        if mmr_property.extra_options2:
-            layout.prop(mmr_property,'fade_in_out',text="Fade in out")
-            layout.prop(mmr_property,'auto_action_scale',text="Auto animation scale")
-            if mmr_property.auto_action_scale==False:
-                layout.prop(mmr_property,'action_scale',text="Animation scale")
-            layout.prop(mmr_property,'lock_location',text="Lock animation location")
-            layout.prop(mmr_property,'import_as_NLA_strip',text="Import as NLA strip")
 Class_list=[
     MMR_Bone_Panel,MMR_Arm_Panel,OT_Add_Preset,OT_Delete_Preset,OT_Read_Preset,OT_Overwrite_Preset,OT_Rig_Preset,
     OT_QA_Start,OT_QA_End,OT_QA_Assign,OT_QA_Assign_Invert,OT_QA_Skip,MMR_Retarget_Panel,

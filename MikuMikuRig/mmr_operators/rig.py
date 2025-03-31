@@ -527,7 +527,12 @@ def RIG2(context):
         #Center.mmd_bone.name_j='センター'
         Center.custom_shape = rig.pose.bones["root"].custom_shape
         # Center.bone.layers=rig.data.bones["torso"].layers
+        rigcollections=rig.data.bones["torso"].collections
+        for collection in rigcollections:
+            collection.assign(Center.bone)
+    
         # Center.bone_group = rig.pose.bone_groups['Special'] 
+        # rig.data.collections['Special'].assign(Center.bone)
     else:
         #rig.pose.bones['MCH-torso.parent'].mmd_bone.name_j='グルーブ'
         pass
@@ -734,8 +739,22 @@ def RIG2(context):
     # rig.data.layers[15] = False
     # rig.data.layers[17] = False
     # rig.data.layers[18] = False
+    rig.data.collections[1].is_visible=False
+    rig.data.collections[2].is_visible=False
+    rig.data.collections[4].is_visible=False
+    rig.data.collections[6].is_visible=True
+    rig.data.collections[8].is_visible=False
+    rig.data.collections[9].is_visible=False
+    rig.data.collections[11].is_visible=False
+    rig.data.collections[12].is_visible=False
+    rig.data.collections[14].is_visible=False
+    rig.data.collections[15].is_visible=False
+    rig.data.collections[17].is_visible=False
+    rig.data.collections[18].is_visible=False
+
     if 'eye.L' not in preset_dict or 'eye.R' not in preset_dict:
-        rig.data.layers[0] = False
+        # rig.data.layers[0] = False
+        rig.data.collections[0].is_visible=False
 
     #锁定移动的骨骼列表
     #lock the location of these bone

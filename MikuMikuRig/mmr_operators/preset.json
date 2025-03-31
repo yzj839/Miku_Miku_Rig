@@ -479,7 +479,9 @@
                 "toe.R",
                 false
             ]
-        }
+        },
+        "": {},
+        "123": {}
     },
     "retarget": {
         "mixamo": {
