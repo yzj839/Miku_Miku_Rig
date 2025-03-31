@@ -1,10 +1,9 @@
 # Miku_Miku_Rig
 MikuMikuRig是一款集生成控制器，自动导入动画，自动布料为一体的blender插件。
-<<<<<<< Updated upstream
-注意：Blender4.0修复
+
+注意：Blender4.1修复
 =======
-注意：尝试迁移到4.0
->>>>>>> Stashed changes
+注意：尝试迁移到4.1
 
 MikumiKurig is a Blender plugin that can generates rig, automatically imports animations as nla track, and automatically generates cloth.
 
@@ -23,7 +22,7 @@ Import any FBX,BVH and VMD animations as NLA strip with one click.
 
 Converts MMD rigid bodies to cloth system with one click.
 
-<<<<<<< Updated upstream
+
 Decorate MMD armature with one click
 
 ![picture1](https://github.com/958261649/Miku_Miku_Rig/blob/main/preview/QQ%E6%88%AA%E5%9B%BE20210616125213.png)
@@ -34,4 +33,3 @@ Decorate MMD armature with one click
 
 =======
 Decorate MMD armature with one click
->>>>>>> Stashed changes
